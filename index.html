@@ -1,0 +1,1109 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Thiệp Gia Bảo</title>
+
+<style>
+:root{
+  --blue:#7fd5ee;
+  --blue-dark:#43a9cc;
+  --blue-soft:#eaf9ff;
+  --text:#34738e;
+  --shadow:rgba(86,190,225,.35);
+  --pink:#ffd6e8;
+  --purple:#d9c7ff;
+}
+
+*{
+  box-sizing:border-box;
+}
+
+html{
+  scroll-behavior:smooth;
+}
+
+body{
+  margin:0;
+  min-height:100vh;
+  font-family:"Comic Sans MS","Segoe UI",sans-serif;
+  color:var(--text);
+  background:
+    radial-gradient(circle at 15% 15%,rgba(255,255,255,.95),transparent 28%),
+    radial-gradient(circle at 85% 20%,rgba(189,239,255,.85),transparent 25%),
+    linear-gradient(180deg,#dff8ff,#f7fdff 55%,#fff7fb);
+  overflow-x:hidden;
+}
+
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  background-image:
+    radial-gradient(circle,#fff 1.4px,transparent 1.5px),
+    radial-gradient(circle,#bcefff 1.2px,transparent 1.4px);
+  background-size:38px 38px,62px 62px;
+  opacity:.45;
+  pointer-events:none;
+  z-index:-2;
+}
+
+.screen{
+  min-height:100dvh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  padding:30px 16px;
+  position:relative;
+}
+
+#card{
+  display:none;
+}
+
+/* LOGIN */
+.login-box{
+  width:min(92vw,470px);
+  padding:34px 28px;
+  text-align:center;
+  background:rgba(255,255,255,.88);
+  border-radius:32px;
+  border:10px solid transparent;
+  border-image:repeating-linear-gradient(45deg,#bdefff 0 10px,#fff 10px 20px) 20;
+  box-shadow:0 25px 70px var(--shadow);
+  backdrop-filter:blur(16px);
+  animation:loginIn .8s ease both;
+  position:relative;
+  overflow:hidden;
+}
+
+.login-box::after{
+  content:"";
+  position:absolute;
+  width:170px;
+  height:170px;
+  right:-70px;
+  top:-70px;
+  background:radial-gradient(circle,rgba(189,239,255,.7),transparent 68%);
+  pointer-events:none;
+}
+
+@keyframes loginIn{
+  from{
+    opacity:0;
+    transform:translateY(30px) scale(.94);
+  }
+  to{
+    opacity:1;
+    transform:translateY(0) scale(1);
+  }
+}
+
+.brand{
+  font-size:14px;
+  letter-spacing:4px;
+  color:var(--blue-dark);
+  text-transform:uppercase;
+  margin-bottom:8px;
+}
+
+h1{
+  margin:8px 0 10px;
+  font-size:clamp(32px,5vw,48px);
+  color:var(--blue-dark);
+  letter-spacing:2px;
+  text-shadow:2px 2px #e6f8ff;
+}
+
+.login-box p{
+  line-height:1.7;
+  margin:12px auto;
+  max-width:360px;
+}
+
+.input-group{
+  margin-top:22px;
+}
+
+.field-label{
+  display:block;
+  width:min(100%,320px);
+  margin:15px auto 6px;
+  text-align:left;
+  font-size:15px;
+  font-weight:bold;
+  color:var(--blue-dark);
+}
+
+input{
+  width:100%;
+  max-width:320px;
+  padding:14px 18px;
+  margin:4px 0;
+  border-radius:999px;
+  border:2px solid #b7e8f6;
+  outline:none;
+  text-align:center;
+  font-size:16px;
+  color:var(--text);
+  background:rgba(255,255,255,.96);
+  transition:.25s;
+}
+
+input:focus{
+  border-color:var(--blue);
+  box-shadow:0 0 0 4px rgba(127,213,238,.25);
+}
+
+.birthday-row{
+  width:min(100%,320px);
+  margin:4px auto 0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+}
+
+.birthday-row input{
+  margin:0;
+  padding:13px 8px;
+}
+
+#day,#month{
+  width:72px;
+}
+
+#year{
+  width:112px;
+}
+
+.slash{
+  font-size:24px;
+  font-weight:bold;
+  color:var(--blue-dark);
+  line-height:1;
+}
+
+.hint{
+  width:min(100%,320px);
+  margin:7px auto 0;
+  text-align:left;
+  font-size:13px;
+  color:#7aaec2;
+}
+
+button{
+  border:none;
+  cursor:pointer;
+  font-family:inherit;
+}
+
+.open-btn{
+  width:100%;
+  max-width:275px;
+  margin-top:20px;
+  padding:14px 22px;
+  border-radius:999px;
+  color:white;
+  font-size:16px;
+  font-weight:bold;
+  background:linear-gradient(135deg,#7fd5ee,#4fb9dc);
+  box-shadow:0 8px 0 #3ba5c8,0 18px 30px rgba(67,169,204,.28);
+  transition:.2s;
+}
+
+.open-btn:hover{
+  transform:translateY(-2px);
+}
+
+.open-btn:active{
+  transform:translateY(5px);
+  box-shadow:0 2px 0 #3ba5c8;
+}
+
+#wrong{
+  min-height:28px;
+  color:#ff5f7e;
+  font-weight:bold;
+  margin-top:14px;
+}
+
+/* LOADING */
+.loading-overlay{
+  position:fixed;
+  inset:0;
+  display:none;
+  justify-content:center;
+  align-items:center;
+  background:rgba(225,248,255,.84);
+  backdrop-filter:blur(16px);
+  z-index:100;
+}
+
+.loading-overlay.show{
+  display:flex;
+}
+
+.loading-card{
+  width:min(88vw,380px);
+  padding:32px;
+  border-radius:32px;
+  background:rgba(255,255,255,.93);
+  box-shadow:0 25px 70px rgba(86,190,225,.38);
+  text-align:center;
+  border:2px solid rgba(127,213,238,.45);
+  animation:loadingPop .5s ease both;
+}
+
+@keyframes loadingPop{
+  from{
+    opacity:0;
+    transform:scale(.86) translateY(20px);
+  }
+  to{
+    opacity:1;
+    transform:scale(1) translateY(0);
+  }
+}
+
+.loader-circle{
+  width:86px;
+  height:86px;
+  margin:0 auto 18px;
+  border-radius:50%;
+  border:5px solid #dff5ff;
+  border-top-color:#62c7e4;
+  animation:spin 1s linear infinite;
+  position:relative;
+}
+
+.loader-circle::after{
+  content:"✦";
+  position:absolute;
+  inset:0;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  color:#62c7e4;
+  font-size:28px;
+  animation:pulse 1.2s ease infinite;
+}
+
+@keyframes spin{
+  to{
+    transform:rotate(360deg);
+  }
+}
+
+@keyframes pulse{
+  0%,100%{
+    transform:scale(.8);
+    opacity:.55;
+  }
+  50%{
+    transform:scale(1.15);
+    opacity:1;
+  }
+}
+
+.loading-text{
+  font-size:18px;
+  font-weight:bold;
+  color:#3f9fc1;
+}
+
+.loading-sub{
+  margin-top:8px;
+  font-size:14px;
+  opacity:.8;
+}
+
+.loading-bar{
+  width:100%;
+  height:9px;
+  margin-top:18px;
+  background:#e7f8ff;
+  border-radius:999px;
+  overflow:hidden;
+}
+
+.loading-bar span{
+  display:block;
+  width:0%;
+  height:100%;
+  background:linear-gradient(90deg,#7fd5ee,#fff,#7fd5ee);
+  border-radius:999px;
+  animation:loadingBar 1.65s ease forwards;
+}
+
+@keyframes loadingBar{
+  to{
+    width:100%;
+  }
+}
+
+/* INVITATION */
+.invite-wrapper{
+  width:min(96vw,1120px);
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:26px;
+  align-items:start;
+  perspective:1200px;
+}
+
+.paper{
+  position:relative;
+  padding:24px;
+  background:rgba(255,255,255,.9);
+  border-radius:34px;
+  border:12px solid transparent;
+  border-image:repeating-linear-gradient(45deg,#bdefff 0 10px,#fff 10px 20px) 20;
+  box-shadow:0 24px 75px rgba(86,190,225,.32);
+  backdrop-filter:blur(16px);
+  overflow:hidden;
+  height:fit-content;
+  animation:
+    cardReveal .9s cubic-bezier(.16,1,.3,1) both,
+    floatingPaper 4.8s ease-in-out infinite;
+}
+
+.paper:nth-child(1){
+  animation-delay:0s,.2s;
+}
+
+.paper:nth-child(2){
+  animation-delay:.13s,.8s;
+}
+
+.paper:hover{
+  box-shadow:0 30px 90px rgba(86,190,225,.42);
+}
+
+.paper::before{
+  content:"";
+  position:absolute;
+  inset:18px;
+  border:1.8px dashed rgba(91,190,220,.45);
+  border-radius:23px;
+  pointer-events:none;
+}
+
+.paper::after{
+  content:"";
+  position:absolute;
+  width:180px;
+  height:180px;
+  right:-65px;
+  top:-65px;
+  background:radial-gradient(circle,rgba(189,239,255,.65),transparent 65%);
+  pointer-events:none;
+}
+
+@keyframes cardReveal{
+  from{
+    opacity:0;
+    transform:rotateY(18deg) translateY(40px) scale(.92);
+    filter:blur(8px);
+  }
+  to{
+    opacity:1;
+    transform:rotateY(0) translateY(0) scale(1);
+    filter:blur(0);
+  }
+}
+
+@keyframes floatingPaper{
+  0%,100%{
+    translate:0 0;
+    rotate:0deg;
+  }
+  50%{
+    translate:0 -9px;
+    rotate:.35deg;
+  }
+}
+
+.icon-top{
+  width:62px;
+  height:62px;
+  margin:4px auto 12px;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  border-radius:50%;
+  font-size:30px;
+  background:linear-gradient(135deg,#effbff,#fff);
+  box-shadow:inset 0 0 0 2px #caeff9,0 10px 28px rgba(127,213,238,.25);
+}
+
+.title-small{
+  text-align:center;
+  letter-spacing:3px;
+  font-size:12px;
+  color:#6dbfd8;
+  text-transform:uppercase;
+}
+
+.paper h2{
+  text-align:center;
+  margin:8px 0 10px;
+  color:var(--blue-dark);
+  font-size:clamp(24px,3vw,34px);
+  letter-spacing:1px;
+}
+
+.divider{
+  width:72%;
+  height:1px;
+  background:linear-gradient(90deg,transparent,#bdefff,transparent);
+  margin:18px auto 20px;
+  position:relative;
+}
+
+.divider::after{
+  content:"✦";
+  position:absolute;
+  left:50%;
+  top:50%;
+  transform:translate(-50%,-50%);
+  padding:0 12px;
+  background:white;
+  color:#78cde7;
+}
+
+.detail{
+  width:min(94%,430px);
+  display:grid;
+  grid-template-columns:48px 1fr;
+  gap:12px;
+  align-items:center;
+  margin:12px auto;
+  padding-bottom:8px;
+  border-bottom:1px dashed #d5eef8;
+  text-align:left;
+}
+
+.circle{
+  width:46px;
+  height:46px;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  border-radius:50%;
+  font-size:20px;
+  background:#e9f8ff;
+  box-shadow:inset 0 0 0 1px #c8eef8;
+}
+
+.detail strong{
+  color:var(--blue-dark);
+  font-size:17px;
+}
+
+.detail span{
+  font-size:15px;
+}
+
+.countdown{
+  width:min(94%,430px);
+  margin:15px auto 0;
+  padding:12px;
+  border-radius:18px;
+  text-align:center;
+  font-size:14px;
+  font-weight:bold;
+  color:#3f9fc1;
+  background:linear-gradient(135deg,#eefaff,#fff);
+  border:1px solid #c8eef8;
+}
+
+.message p{
+  max-width:430px;
+  margin:15px auto;
+  font-size:17px;
+  line-height:1.85;
+  text-align:center;
+}
+
+#hello{
+  font-weight:bold;
+  color:#3f9fc1;
+}
+
+.signature{
+  margin-top:18px;
+  text-align:center;
+  font-size:25px;
+  color:var(--blue-dark);
+}
+
+.music-btn{
+  position:fixed;
+  right:18px;
+  bottom:18px;
+  z-index:20;
+  width:48px;
+  height:48px;
+  border-radius:50%;
+  color:white;
+  background:linear-gradient(135deg,#8bdcf1,#48b6d8);
+  box-shadow:0 12px 28px rgba(67,169,204,.35);
+  display:none;
+}
+
+.music-btn.show{
+  display:block;
+}
+
+canvas{
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  z-index:10;
+}
+
+.float{
+  position:fixed;
+  bottom:-40px;
+  font-size:22px;
+  animation:floatUp linear forwards;
+  pointer-events:none;
+  z-index:5;
+}
+
+@keyframes floatUp{
+  from{
+    transform:translateY(0) scale(.85);
+    opacity:0;
+  }
+  15%{
+    opacity:1;
+  }
+  to{
+    transform:translateY(-110vh) scale(1.25);
+    opacity:0;
+  }
+}
+
+.sparkle{
+  position:fixed;
+  color:#74cce7;
+  animation:spark 1.2s linear forwards;
+  pointer-events:none;
+  z-index:5;
+}
+
+@keyframes spark{
+  from{
+    transform:scale(0) rotate(0);
+    opacity:1;
+  }
+  to{
+    transform:scale(1.8) rotate(180deg);
+    opacity:0;
+  }
+}
+
+.wave{
+  position:fixed;
+  left:0;
+  bottom:-20px;
+  width:100%;
+  height:110px;
+  background:
+    radial-gradient(70% 70% at 50% 0%,rgba(144,219,241,.4),transparent 70%),
+    linear-gradient(180deg,rgba(166,232,248,.25),rgba(255,255,255,.2));
+  z-index:-1;
+}
+
+@media(max-width:850px){
+  .screen{
+    align-items:flex-start;
+    padding-top:26px;
+    padding-bottom:26px;
+  }
+
+  .invite-wrapper{
+    grid-template-columns:1fr;
+    gap:22px;
+  }
+
+  .paper{
+    padding:22px 18px;
+    border-width:9px;
+    border-radius:28px;
+  }
+
+  .paper::before{
+    inset:13px;
+  }
+}
+
+@media(max-width:430px){
+  .login-box{
+    padding:26px 18px;
+  }
+
+  .birthday-row{
+    gap:5px;
+  }
+
+  #day,#month{
+    width:62px;
+  }
+
+  #year{
+    width:98px;
+  }
+
+  .slash{
+    font-size:21px;
+  }
+
+  .paper h2{
+    font-size:25px;
+  }
+
+  .message p{
+    font-size:16px;
+  }
+
+  .detail{
+    grid-template-columns:44px 1fr;
+  }
+
+  .circle{
+    width:42px;
+    height:42px;
+    font-size:18px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<canvas id="confettiCanvas"></canvas>
+<div class="wave"></div>
+
+<div class="loading-overlay" id="loadingOverlay">
+  <div class="loading-card">
+    <div class="loader-circle"></div>
+    <div class="loading-text">Đang mở thiệp mời...</div>
+    <div class="loading-sub">Chuẩn bị hiệu ứng sinh nhật ✨</div>
+    <div class="loading-bar"><span></span></div>
+  </div>
+</div>
+
+<section class="screen" id="login">
+  <div class="login-box">
+    <div class="brand">Birthday Invitation</div>
+    <h1>Thiệp Sinh Nhựt Của Gia Bảo</h1>
+
+    <p>
+      Bạn đã nhận được một lời mời đặc biệt.
+      Hãy nhập tên của bạn và sinh nhật của Gia Bảo để mở thiệp.
+    </p>
+
+    <div class="input-group">
+      <label class="field-label" for="guestName">✨ Tên của bạn</label>
+      <input
+        id="guestName"
+        type="text"
+        placeholder="Ví dụ: Nguyễn Văn A"
+        autocomplete="off"
+      />
+
+      <label class="field-label">🎂 Sinh nhật của Gia Bảo</label>
+      <div class="birthday-row">
+        <input id="day" type="text" inputmode="numeric" maxlength="2" placeholder="DD" />
+        <span class="slash">/</span>
+        <input id="month" type="text" inputmode="numeric" maxlength="2" placeholder="MM" />
+        <span class="slash">/</span>
+        <input id="year" type="text" inputmode="numeric" maxlength="4" placeholder="YYYY" />
+<div class="hint">
+        
+      </div>
+    </div>
+
+
+     
+    <button class="open-btn" onclick="checkPass()">Mở thiệp ✨</button>
+
+    <p id="wrong"></p>
+  </div>
+</section>
+
+<section class="screen" id="card">
+  <div class="invite-wrapper">
+
+    <article class="paper">
+      <div class="icon-top">✉️</div>
+      <div class="title-small">Invitation Details</div>
+      <h2>Thông tin buổi tiệc</h2>
+      <div class="divider"></div>
+
+      <div class="detail">
+        <div class="circle">🗓️</div>
+        <div>
+          <strong>Ngày</strong><br />
+          <span>18 / 06 / 2026</span>
+        </div>
+      </div>
+
+      <div class="detail">
+        <div class="circle">🕒</div>
+        <div>
+          <strong>Thời gian</strong><br />
+          <span>15:00</span>
+        </div>
+      </div>
+
+      <div class="detail">
+        <div class="circle">📍</div>
+        <div>
+          <strong>Địa điểm</strong><br />
+          <span>.....</span>
+        </div>
+      </div>
+
+      <div class="detail">
+        <div class="circle">👕</div>
+        <div>
+          <strong>Dresscode</strong><br />
+          <span>Xanh nhạt • Trắng • Pastel</span>
+        </div>
+      </div>
+
+      <div class="countdown" id="countdown"></div>
+    </article>
+
+    <article class="paper message">
+      <div class="icon-top">🌊</div>
+      <div class="title-small">A Little Message</div>
+      <h2>Lời nhắn nhủ</h2>
+      <div class="divider"></div>
+
+      <p id="hello">
+        Cảm ơn bạn đã xuất hiện trong hành trình tuổi trẻ của mình.
+      </p>
+
+      <p>
+        Mình rất mong bạn sẽ dành một chút thời gian đến chung vui
+        trong ngày đặc biệt này.
+      </p>
+
+      <p>
+        Chỉ cần bạn có mặt, đó đã là món quà ý nghĩa nhất rồi.
+      </p>
+
+      <div class="signature">Hẹn gặp bạn nhé ✨</div>
+    </article>
+
+  </div>
+</section>
+
+<button class="music-btn" id="musicBtn" onclick="toggleMusic()">♫</button>
+
+<audio id="music" loop>
+  <source src="https://www.chosic.com/wp-content/uploads/2021/07/purrple-cat-floating-castle.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+const correctDay = "01";
+const correctMonth = "06";
+const correctYear = "2008";
+const partyDate = new Date("2026-06-18T15:00:00");
+
+let floatTimer = null;
+let sparkleTimer = null;
+let countdownTimer = null;
+
+const canvas = document.getElementById("confettiCanvas");
+const ctx = canvas.getContext("2d");
+
+let confettiPieces = [];
+let confettiAnimation = null;
+
+function resizeCanvas(){
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+
+resizeCanvas();
+window.addEventListener("resize", resizeCanvas);
+
+setupBirthdayInputs();
+
+function setupBirthdayInputs(){
+  const day = document.getElementById("day");
+  const month = document.getElementById("month");
+  const year = document.getElementById("year");
+
+  [day, month, year].forEach(input => {
+    input.addEventListener("input", () => {
+      input.value = input.value.replace(/\D/g,"");
+    });
+  });
+
+  day.addEventListener("input", () => {
+    if(day.value.length === 2) month.focus();
+  });
+
+  month.addEventListener("input", () => {
+    if(month.value.length === 2) year.focus();
+  });
+
+  month.addEventListener("keydown", event => {
+    if(event.key === "Backspace" && month.value.length === 0) day.focus();
+  });
+
+  year.addEventListener("keydown", event => {
+    if(event.key === "Backspace" && year.value.length === 0) month.focus();
+  });
+}
+
+function checkPass(){
+  const day = document.getElementById("day").value.trim().padStart(2,"0");
+  const month = document.getElementById("month").value.trim().padStart(2,"0");
+  const year = document.getElementById("year").value.trim();
+  const name = document.getElementById("guestName").value.trim();
+  const wrong = document.getElementById("wrong");
+  const loadingOverlay = document.getElementById("loadingOverlay");
+
+  if(day !== correctDay || month !== correctMonth || year !== correctYear){
+    wrong.innerHTML = "❌ Sai rồi. Vui lòng nhập lại.";
+    shakeLogin();
+    softErrorSound();
+    return;
+  }
+
+  wrong.innerHTML = "";
+  blingSound();
+  loadingOverlay.classList.add("show");
+
+  setTimeout(() => {
+    document.getElementById("login").style.display = "none";
+    document.getElementById("card").style.display = "flex";
+    document.getElementById("musicBtn").classList.add("show");
+    loadingOverlay.classList.remove("show");
+
+    if(name !== ""){
+      document.getElementById("hello").innerHTML =
+      "Gửi " + escapeHTML(name) + ", cảm ơn bạn đã xuất hiện trong hành trình tuổi trẻ của mình.";
+    }
+
+    startExperience();
+  }, 1650);
+}
+
+function shakeLogin(){
+  const box = document.querySelector(".login-box");
+
+  box.animate(
+    [
+      {transform:"translateX(0)"},
+      {transform:"translateX(-8px)"},
+      {transform:"translateX(8px)"},
+      {transform:"translateX(-6px)"},
+      {transform:"translateX(6px)"},
+      {transform:"translateX(0)"}
+    ],
+    {duration:360, easing:"ease"}
+  );
+}
+
+function startExperience(){
+  startConfetti();
+  playMusic();
+
+  clearInterval(floatTimer);
+  clearInterval(sparkleTimer);
+  clearInterval(countdownTimer);
+
+  floatTimer = setInterval(createFloating, 520);
+  sparkleTimer = setInterval(createSparkle, 260);
+
+  updateCountdown();
+  countdownTimer = setInterval(updateCountdown, 1000);
+}
+
+function blingSound(){
+  const AudioContext = window.AudioContext || window.webkitAudioContext;
+  if(!AudioContext) return;
+
+  const audioCtx = new AudioContext();
+  const notes = [1046.5, 1318.5, 1568, 2093];
+
+  notes.forEach((freq, index) => {
+    const oscillator = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+
+    oscillator.type = "sine";
+    oscillator.frequency.setValueAtTime(freq, audioCtx.currentTime + index * 0.09);
+
+    gain.gain.setValueAtTime(0, audioCtx.currentTime + index * 0.09);
+    gain.gain.linearRampToValueAtTime(0.13, audioCtx.currentTime + index * 0.09 + 0.015);
+    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + index * 0.09 + 0.38);
+
+    oscillator.connect(gain);
+    gain.connect(audioCtx.destination);
+
+    oscillator.start(audioCtx.currentTime + index * 0.09);
+    oscillator.stop(audioCtx.currentTime + index * 0.09 + 0.4);
+  });
+}
+
+function softErrorSound(){
+  const AudioContext = window.AudioContext || window.webkitAudioContext;
+  if(!AudioContext) return;
+
+  const audioCtx = new AudioContext();
+  const oscillator = audioCtx.createOscillator();
+  const gain = audioCtx.createGain();
+
+  oscillator.type = "triangle";
+  oscillator.frequency.setValueAtTime(180, audioCtx.currentTime);
+
+  gain.gain.setValueAtTime(0.09, audioCtx.currentTime);
+  gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.25);
+
+  oscillator.connect(gain);
+  gain.connect(audioCtx.destination);
+
+  oscillator.start();
+  oscillator.stop(audioCtx.currentTime + 0.25);
+}
+
+function playMusic(){
+  const music = document.getElementById("music");
+  music.volume = 0.22;
+
+  music.play()
+    .then(() => {
+      document.getElementById("musicBtn").innerHTML = "♫";
+    })
+    .catch(() => {
+      document.getElementById("musicBtn").innerHTML = "▶";
+    });
+}
+
+function toggleMusic(){
+  const music = document.getElementById("music");
+  const btn = document.getElementById("musicBtn");
+
+  if(music.paused){
+    music.play();
+    btn.innerHTML = "♫";
+  }else{
+    music.pause();
+    btn.innerHTML = "▶";
+  }
+}
+
+function startConfetti(){
+  confettiPieces = [];
+
+  for(let i = 0; i < 170; i++){
+    confettiPieces.push({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height - canvas.height,
+      size: Math.random() * 8 + 4,
+      speed: Math.random() * 3 + 2,
+      rotation: Math.random() * 360,
+      rotationSpeed: Math.random() * 8 - 4,
+      color: ["#7fd5ee","#ffffff","#ffd6e8","#d9c7ff","#bdefff"][Math.floor(Math.random()*5)]
+    });
+  }
+
+  cancelAnimationFrame(confettiAnimation);
+  animateConfetti();
+
+  setTimeout(() => {
+    confettiPieces = [];
+  }, 4300);
+}
+
+function animateConfetti(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+
+  confettiPieces.forEach(piece => {
+    piece.y += piece.speed;
+    piece.rotation += piece.rotationSpeed;
+
+    ctx.save();
+    ctx.translate(piece.x, piece.y);
+    ctx.rotate(piece.rotation * Math.PI / 180);
+    ctx.fillStyle = piece.color;
+    ctx.fillRect(-piece.size/2, -piece.size/2, piece.size, piece.size * 1.4);
+    ctx.restore();
+  });
+
+  confettiPieces = confettiPieces.filter(piece => piece.y < canvas.height + 30);
+
+  if(confettiPieces.length > 0){
+    confettiAnimation = requestAnimationFrame(animateConfetti);
+  }else{
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+  }
+}
+
+function createFloating(){
+  const f = document.createElement("div");
+  f.className = "float";
+  f.innerHTML = ["✨","✦","✧","⭐","🫧","🌊"][Math.floor(Math.random()*6)];
+  f.style.left = Math.random() * 100 + "vw";
+  f.style.animationDuration = 5 + Math.random() * 3 + "s";
+  f.style.opacity = 0.6 + Math.random() * 0.4;
+  document.body.appendChild(f);
+  setTimeout(() => f.remove(), 8500);
+}
+
+function createSparkle(){
+  const s = document.createElement("div");
+  s.className = "sparkle";
+  s.innerHTML = "✦";
+  s.style.left = Math.random() * 100 + "vw";
+  s.style.top = Math.random() * 100 + "vh";
+  s.style.fontSize = 10 + Math.random() * 20 + "px";
+  s.style.opacity = 0.45 + Math.random() * 0.45;
+  document.body.appendChild(s);
+  setTimeout(() => s.remove(), 1300);
+}
+
+function updateCountdown(){
+  const now = new Date();
+  const diff = partyDate - now;
+  const countdown = document.getElementById("countdown");
+
+  if(diff <= 0){
+    countdown.innerHTML = "Đến giờ tiệc rồi đóoo 🎂";
+    return;
+  }
+
+  const days = Math.floor(diff / (1000*60*60*24));
+  const hours = Math.floor((diff / (1000*60*60)) % 24);
+  const minutes = Math.floor((diff / (1000*60)) % 60);
+  const seconds = Math.floor((diff / 1000) % 60);
+
+  countdown.innerHTML =
+    "Còn " + days + " ngày " +
+    hours + " giờ " +
+    minutes + " phút " +
+    seconds + " giây";
+}
+
+function escapeHTML(text){
+  return text
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+}
+</script>
+
+</body>
+</html>
